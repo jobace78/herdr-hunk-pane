@@ -1,0 +1,15 @@
+# the scripts run on the Python 3.9 macOS ships in /usr/bin/python3, and ruff does not read the
+# requires-python of their PEP 723 block
+line-length = 100
+target-version = "py39"
+
+[lint]
+ignore = ["D104", "D107", "S603", "S607"]
+select = ["B", "D", "E", "F", "I", "S", "SIM", "UP"]
+
+[lint.per-file-ignores]
+"conftest.py" = ["D", "S101"]
+"test_*.py" = ["D", "S101", "S105", "S106"]
+
+[lint.pydocstyle]
+convention = "google"

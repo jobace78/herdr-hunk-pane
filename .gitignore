@@ -1,0 +1,16 @@
+*~
+.DS_Store
+.DS_Store?
+.Spotlight-V100
+.Trashes
+._*
+Icon?
+Thumbs.db
+
+*.iml
+.idea/
+
+### DO NOT MODIFY ABOVE THIS LINE ###
+
+gpui-kit.d.ts
+jsconfig.json
