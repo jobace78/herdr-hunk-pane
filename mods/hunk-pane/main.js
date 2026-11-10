@@ -1,8 +1,8 @@
 // The strip under the panes for the hunk pane of the focused tab, the one the hunk-pane command
-// (bin/hunk_pane.py) opens: a button per repository added to it, whose changes patch.py (beside
-// this file) writes to the pane's patch, and the user's hunk notes handed to the agents. What it
-// does, and the labels it shares with the command, are in the mod's RECIPE.md, which an install
-// leaves out: https://github.com/jobace78/herdr-hunk-pane/blob/main/RECIPE.md
+// (hunk_pane.py, beside this file) opens: a button per repository added to it, whose changes
+// patch.py (beside it too) writes to the pane's patch, and the user's hunk notes handed to the
+// agents. What it does, and the labels it shares with the command, are in the mod's RECIPE.md,
+// which an install leaves out: https://github.com/jobace78/herdr-hunk-pane/blob/main/RECIPE.md
 //
 // The decisions that need no Herdr (order, the ×, where a note goes) are in helpers.js.
 

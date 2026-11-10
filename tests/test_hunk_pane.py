@@ -98,7 +98,7 @@ def repository_labels(repository: Path, name: str = "repo") -> list[str]:
     ]
 
 
-hunk_pane = load_script("hunk_pane", ROOT / "bin" / "hunk_pane.py")
+hunk_pane = load_script("hunk_pane", ROOT / "mods" / "hunk-pane" / "hunk_pane.py")
 
 
 @pytest.fixture

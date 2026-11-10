@@ -116,17 +116,19 @@ note's thread.
   --refresh` only when that index changes. Python 3.9 standard library only, 4 s
   timeout per git call, so that its at most seven calls end within the 30 s
   Herdr gives `exec`; a patch over 8 MiB is written empty.
-- **`bin/hunk_pane.py`**: the command, linked or copied onto your `PATH` as
-  `hunk-pane` (for example `ln -s <this folder>/bin/hunk_pane.py
-  ~/.local/bin/hunk-pane`). It reads its terminal's tab from `hc get
-  $HC_TERMINAL_ID --json` (labels `herdr.space`, `herdr.tab`), finds the tab's
-  pane with `hc ls --json --label hunk-pane.tab=<tab>`, and labels it, or starts
-  one with `hc run --bg --no-parent --rm --cwd ~` and the labels `herdr.space`
-  and `herdr.tab` (Herdr adopts it as a pane of that tab, without the focus),
-  `hunk-pane.tab` and the repository's, its name chosen against the names the
-  pane already holds. That terminal runs `hunk patch <patch> --watch` on
-  `~/.cache/hunk-pane/<tab id>.patch`, touched first so hunk has a file to open.
-  It exits 1 on the failures listed in Adding, else 0.
+- **`mods/hunk-pane/hunk_pane.py`**: the command, in the mod folder so that
+  copying the mod installs and updates it too, linked onto your `PATH` as
+  `hunk-pane` from that copy (for example `ln -s
+  ~/.config/herdr-app/mods/hunk-pane/hunk_pane.py ~/.local/bin/hunk-pane`;
+  `chmod +x` it if the copy lost the bit). It reads its terminal's tab from `hc
+  get $HC_TERMINAL_ID --json` (labels `herdr.space`, `herdr.tab`), finds the
+  tab's pane with `hc ls --json --label hunk-pane.tab=<tab>`, and labels it, or
+  starts one with `hc run --bg --no-parent --rm --cwd ~` and the labels
+  `herdr.space` and `herdr.tab` (Herdr adopts it as a pane of that tab, without
+  the focus), `hunk-pane.tab` and the repository's, its name chosen against the
+  names the pane already holds. That terminal runs `hunk patch <patch> --watch`
+  on `~/.cache/hunk-pane/<tab id>.patch`, touched first so hunk has a file to
+  open. It exits 1 on the failures listed in Adding, else 0.
 - **The protocol** is the hunk terminal's labels, written by both sides (only
   here: the script and `main.js` point to this list):
 
@@ -154,13 +156,15 @@ note's thread.
   environments and must agree, and the strip never takes the patch path from a
   terminal, whose labels and argv any process can set.
 - **Install both halves**: the mod folder in `mods/`, the layout block in a
-  layout of your own, and `bin/hunk_pane.py` on the `PATH` as `hunk-pane`.
-  Without the block nothing shows: the mod never docks itself. Herdr's own
-  layouts are read-only, and an edit to one is moved aside on the next start, so
-  clone `main` first (`herdr-app do layout.clone
+  layout of your own, and the copied `hunk_pane.py` on the `PATH` as
+  `hunk-pane`. Without the block nothing shows: the mod never docks itself.
+  Herdr's own layouts are read-only, and an edit to one is moved aside on the
+  next start, so clone `main` first (`herdr-app do layout.clone
   '{"name":"main","as":"my-layout"}'`) and add the block to the clone.
-  After updating this folder, copy the mod folder into `mods/` again: Herdr
-  runs that copy, while a linked `hunk-pane` is already current.
+  Copy the mod folder, never link it: through a symlinked folder Herdr runs the
+  code but loads no art, so the × is missing. After updating this folder, copy
+  the mod folder into `mods/` again: Herdr and the linked `hunk-pane` both run
+  that copy.
 - **It runs programs**: the strip runs `python3`, `rm` and `hunk session` and
   calls `hc`, which types notes into agents; the script runs `git`, `hc` and
   `hunk`. Neither reaches the network itself (git may, in a partial clone, as in
