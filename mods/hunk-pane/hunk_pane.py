@@ -9,17 +9,17 @@ Usage, from a Herdr terminal (in Claude Code or Codex, with ``!``):
 
     hunk-pane [<path>]
 
-The repository is the one the path is in, or the current folder's, and becomes the shown one; one
-with no uncommitted changes, untracked files included, is not added. The pane runs ``hunk patch``
-on ``~/.cache/hunk-pane/<tab id>.patch``, which the hunk-pane mod of Herdr writes: this script
-only labels the hunk terminal. How the two behave, and the labels they share, are in RECIPE.md:
-https://github.com/jobace78/herdr-hunk-pane/blob/main/RECIPE.md. It runs on Python 3.9, the
-one macOS ships in ``/usr/bin/python3``.
+The repository is the one the path is in, or the current folder's, and becomes the shown one, with
+or without uncommitted changes. The pane runs ``hunk patch`` on
+``~/.cache/hunk-pane/<tab id>.patch``, which the hunk-pane mod of Herdr writes: this script only
+labels the hunk terminal. How the two behave, and the labels they share, are in RECIPE.md:
+https://github.com/jobace78/herdr-hunk-pane/blob/main/RECIPE.md. It runs on Python 3.9, the one
+macOS ships in ``/usr/bin/python3``.
 
 Exit codes:
-    0: added, already in the pane, or left out for having no changes.
-    1: run as root, outside Herdr or a repository, in no tab, the repository's status or a terminal
-       unreadable, no hunk on the PATH for a new pane, or the pane could not be opened or labelled.
+    0: added or already in the pane.
+    1: run as root, outside Herdr or a repository, in no tab, a terminal unreadable, no hunk on the
+       PATH for a new pane, or the pane could not be opened or labelled.
     2: wrong arguments.
 """
 
@@ -82,13 +82,6 @@ def main(argv: Optional[list[str]] = None) -> int:
     if not repository:
         logger.error("'%s' is NOT in a git repository, exiting.", path)
         return ExitCode.FAILURE
-    status = _status(repository)
-    if status is None:
-        logger.error("'%s' repository status could NOT be read, exiting.", repository)
-        return ExitCode.FAILURE
-    if not status:
-        logger.warning("'%s' repository has NO uncommitted changes, exiting.", repository)
-        return ExitCode.OK
     own = _terminal(terminal_id)
     if own is None:
         logger.error("'%s' Herdr terminal could NOT be read, exiting.", terminal_id)
@@ -161,18 +154,6 @@ def _run(argv: list[str]) -> Optional[str]:
     except (OSError, subprocess.SubprocessError):
         return None
     return completed.stdout.rstrip("\n")
-
-
-def _status(repository: str) -> Optional[str]:
-    """Return a repository's git status, None when git cannot read it.
-
-    Untracked files count whatever status.showUntrackedFiles says, as patch.py shows them; with no
-    optional lock, git leaves the index to the agents' own git.
-    """
-    return _run(
-        ["git", "-C", repository, "--no-optional-locks", "status", "--porcelain"]
-        + ["--untracked-files=normal"]
-    )
 
 
 def _terminal(terminal_id: str) -> Optional[tuple[dict[str, str], list[str]]]:

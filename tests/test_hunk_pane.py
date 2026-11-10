@@ -73,12 +73,6 @@ class FakeHc:
         self.state_path.write_text(json.dumps(state), encoding="utf-8")
 
 
-def git(repository: Path, *args: str) -> str:
-    return subprocess.run(
-        ["git", "-C", str(repository), *args], capture_output=True, check=True, text=True
-    ).stdout
-
-
 def load_script(name: str, path: Path) -> ModuleType:
     spec = importlib.util.spec_from_file_location(name, path)
     assert spec is not None
@@ -155,31 +149,16 @@ def test_main_fails_outside_a_repository(tmp_path: Path, fake_hc: FakeHc) -> Non
 
 
 @pytest.mark.usefixtures("in_herdr")
-def test_main_leaves_out_a_repository_without_changes(
-    make_repository: Callable[..., Path], fake_hc: FakeHc, caplog: pytest.LogCaptureFixture
+def test_main_adds_a_repository_without_changes(
+    make_repository: Callable[..., Path], fake_hc: FakeHc
 ) -> None:
     repository = make_repository()
+    fake_hc.set(get={"t1": TAB_LABELS, "t9": PANE}, ls=LISTING)
 
     exit_code = hunk_pane.main([str(repository)])
 
     assert exit_code == 0
-    assert fake_hc.argvs() == []
-    assert caplog.messages == [f"'{repository}' repository has NO uncommitted changes, exiting."]
-
-
-@pytest.mark.usefixtures("in_herdr")
-def test_main_fails_when_the_repository_status_cannot_be_read(
-    changed_repository: Path, fake_hc: FakeHc, caplog: pytest.LogCaptureFixture
-) -> None:
-    (changed_repository / ".git" / "index").write_bytes(b"not an index")
-
-    exit_code = hunk_pane.main([str(changed_repository)])
-
-    assert exit_code == 1
-    assert fake_hc.argvs() == []
-    assert caplog.messages == [
-        f"'{changed_repository}' repository status could NOT be read, exiting."
-    ]
+    assert fake_hc.argvs()[-1] == ["label", "t9", *repository_labels(repository)]
 
 
 @pytest.mark.usefixtures("in_herdr")
@@ -193,21 +172,6 @@ def test_main_opens_no_second_pane_when_the_terminals_cannot_be_listed(
     assert exit_code == 1
     assert [argv[0] for argv in fake_hc.argvs()] == ["get", "ls"]
     assert caplog.messages == ["'tb1' tab's terminals could NOT be listed, exiting."]
-
-
-@pytest.mark.usefixtures("in_herdr")
-def test_main_counts_untracked_files_the_repository_hides_from_status(
-    make_repository: Callable[..., Path], fake_hc: FakeHc
-) -> None:
-    repository = make_repository()
-    git(repository, "config", "status.showUntrackedFiles", "no")
-    (repository / "new.txt").write_text("x\n", encoding="utf-8")
-    fake_hc.set(get={"t1": TAB_LABELS, "t9": PANE}, ls=LISTING)
-
-    exit_code = hunk_pane.main([str(repository)])
-
-    assert exit_code == 0
-    assert fake_hc.argvs()[-1] == ["label", "t9", *repository_labels(repository)]
 
 
 @pytest.mark.usefixtures("in_herdr")

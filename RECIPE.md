@@ -46,10 +46,10 @@ note's thread.
   the terminal it ran in, without moving the focus, or joins the pane the tab
   has. A repository already there is just shown, and its notes go from then on
   to the terminal the command ran in (that is how another agent takes them
-  over). One with no uncommitted changes is not added: the command says so.
-  Outside Herdr, outside a repository, as root, without `hunk` on the `PATH` for
-  a new pane, or when git or Herdr cannot tell it the repository's state, the
-  tab or the pane, or when Herdr will not open or label the pane, it fails.
+  over). One with no uncommitted changes is added too: hunk shows "No changes
+  to review." until it has some. Outside Herdr, outside a repository, as root,
+  without `hunk` on the `PATH` for a new pane, or when Herdr cannot tell it the
+  tab or the pane, or will not open or label the pane, it fails.
 - **Clicking a button** shows that repository: the pane switches within a
   moment. Clicking the pressed one does nothing.
 - **The ×** takes a repository out. If it was the shown one, the next button
@@ -250,7 +250,8 @@ note's thread.
 - `! hunk-pane` in a repository with changes opens a `hunk` pane in that tab,
   the focus stays where it was, the strip shows one pressed button with the
   repository's name, and the pane lists its changes, untracked files included.
-  In a repository with no changes it prints a warning and changes nothing.
+  In a repository with no changes it adds the button too, and the pane shows
+  "No changes to review." until the first change.
 - Adding a second repository adds a button in name order, pressed, and the
   pane shows that repository; clicking the first button shows the first again
   within a moment. One with the same folder name shows `<parent>-<folder>`.
