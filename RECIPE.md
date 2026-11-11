@@ -16,9 +16,10 @@ note's thread.
 - **The strip**: 28 px tall, the full width of the work column, right under the
   panes (not under the sidebar). Background `chrome`, a 1 px `border` line on
   top, 8 px of padding on both sides so its content lines up with the pane cards
-  above, 14 px text. It always starts with `hunk-pane` in 12 px `dim` text.
-- **No pane in the focused tab**: `hunk-pane` alone.
-- **With a pane**: after `hunk-pane`, one button per repository added, framed
+  above, 14 px text. It always starts with a 14 px ± icon, the + green and the
+  − red, with a `hunk-pane` tooltip.
+- **No pane in the focused tab**: the icon alone.
+- **With a pane**: after the icon, one button per repository added, framed
   like the tabs: 22 px tall, a 1 px `border` outline rounded 6 px, 12 px padding
   on the left and 5 px on the right, 7 px between the name and its ×, 6 px
   between buttons. The shown repository's button is pressed (`selected`
@@ -90,8 +91,8 @@ note's thread.
   `place` is `none` because a docked mod (`"bottom"`) goes under the whole
   window, sidebar included, not under the panes.
 - **`mods/hunk-pane/main.js`**, the strip: a `View` whose `render()` reads
-  `focused().tab` and `terminals()`, and draws with `h_flex`, `div`, `svg` and
-  `theme()`. A `cx.timer.every(3000)` refresh runs `python3
+  `focused().tab` and `terminals()`, and draws with `h_flex`, `div`, `image`,
+  `svg` and `theme()`. A `cx.timer.every(3000)` refresh runs `python3
   <appHome>/mods/hunk-pane/patch.py <patch> <name> <repo>` through `exec` inside
   `cx.spawn`, lists `~/.cache/hunk-pane/` with `fs.readdir` and deletes the
   files of panes gone with `rm -f`. Clicks call `hc(["label", …])`; the last ×
@@ -140,12 +141,13 @@ note's thread.
   hunk-pane.tab=<tab id>           its tab; the patch is ~/.cache/hunk-pane/<tab id>.patch
   ```
 
-- **Programs**: `hunk` (tested with 0.24.1), `git` 2.31 or newer (`rev-parse
+- **Programs**: `hunk` (tested with 0.25.0), `git` 2.31 or newer (`rev-parse
   --path-format`), `python3` 3.9 or newer (the one macOS ships in
   `/usr/bin/python3` is enough), `hc` (Herdr's), `sh` and `rm`. Tested with
-  Herdr 0.1.13.
+  Herdr 0.1.15.
 - **Art**: `close.svg`, a copy of Herdr's `mods/pane/close.svg`, so the × looks
-  like the panes' own.
+  like the panes' own; `hunk_pane.svg`, the ± drawn with `image`, since `svg`
+  draws in the text color alone.
 
 ## Watch out
 
@@ -246,7 +248,7 @@ note's thread.
 - The tests in `tests/` pass: `node --test tests/`, and pytest 8.4 (the last
   release on Python 3.9) on Python 3.9 for the two scripts.
 - `herdr-app check mods/hunk-pane` passes and the strip shows under the panes,
-  with only its `hunk-pane` label, in a tab with no pane.
+  with only its icon, in a tab with no pane.
 - `! hunk-pane` in a repository with changes opens a `hunk` pane in that tab,
   the focus stays where it was, the strip shows one pressed button with the
   repository's name, and the pane lists its changes, untracked files included.
@@ -260,7 +262,7 @@ note's thread.
 - The × on the shown button shows the next repository; the × on the last button
   closes the pane, `hc ls` no longer lists its terminal, and its patch and
   private indexes are gone from `~/.cache/hunk-pane/` within 6 s.
-- Switching tabs switches the strip to that tab's buttons, or to the label
+- Switching tabs switches the strip to that tab's buttons, or to the icon
   alone, and that tab's pane shows its current changes at once.
 - A note written in the pane reaches the agent that added its repository as one
   message, once (reloading the mod does not send it again), and the agent's

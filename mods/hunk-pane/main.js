@@ -8,7 +8,7 @@
 
 import * as fs from "fs/promises";
 import { h_flex } from "gpui-base";
-import { View, div, svg } from "gpui-kit";
+import { View, div, image, svg } from "gpui-kit";
 import { agents, appHome, exec, focused, hc, home, panes, run, terminals, theme } from "herdr";
 import {
   MOD,
@@ -239,9 +239,11 @@ export default class HunkPane extends View {
     const hunkTerminals = hunks();
     const hunk = hunkTerminals.find((h) => h.tab === tab && !h.lost);
     this.refresh(cx, { hunkTerminals });
+    // image, not svg: svg draws in the text color alone, and the icon keeps its green and red
     const root = h_flex().id("root").size_full().min_w(0).px(8).gap(8).items_center().bg(t.chrome)
       .border_t(1).border_color(t.border).text_size(14)
-      .child(div().flex_none().text_size(12).text_color(t.dim).child(MOD));
+      .child(div().id("icon").flex_none().tooltip(MOD)
+        .child(image(`mods/${MOD}/hunk_pane.svg`).size(14)));
     if (!hunk || hunk.repos.length === 0) {
       return root;
     }
