@@ -9,7 +9,19 @@
 import * as fs from "fs/promises";
 import { h_flex } from "gpui-base";
 import { View, div, image, svg } from "gpui-kit";
-import { agents, appHome, exec, focused, hc, home, panes, run, terminals, theme } from "herdr";
+import {
+  agents,
+  appHome,
+  checking,
+  exec,
+  focused,
+  hc,
+  home,
+  panes,
+  run,
+  terminals,
+  theme,
+} from "herdr";
 import {
   MOD,
   SELECTED_LABEL,
@@ -158,7 +170,8 @@ export default class HunkPane extends View {
   // patches of panes gone and hands the new notes to their agents. render passes the hunk terminals
   // it read.
   refresh(cx, { full = false, hunkTerminals = hunks() } = {}) {
-    if (this.busy) {
+    // herdr-app check runs the mod for real: it writes no patch and hands no note
+    if (this.busy || checking()) {
       return;
     }
     const running = hunkTerminals.filter((h) => !h.lost);

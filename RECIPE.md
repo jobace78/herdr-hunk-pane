@@ -143,8 +143,8 @@ note's thread.
 
 - **Programs**: `hunk` (tested with 0.25.0), `git` 2.31 or newer (`rev-parse
   --path-format`), `python3` 3.9 or newer (the one macOS ships in
-  `/usr/bin/python3` is enough), `hc` (Herdr's), `sh` and `rm`. Tested with
-  Herdr 0.1.15.
+  `/usr/bin/python3` is enough), `hc` (Herdr's), `sh` and `rm`. Herdr 0.1.16
+  or newer (`checking`).
 - **Art**: `close.svg`, a copy of Herdr's `mods/pane/close.svg`, so the × looks
   like the panes' own; `hunk_pane.svg`, the ± drawn with `image`, since `svg`
   draws in the text color alone.
@@ -209,7 +209,8 @@ note's thread.
   `cx.spawn` would leave the refresh's busy flag set forever: keep it in a
   `try`/`finally`.
 - **`herdr-app check`** renders the mod once; it does not catch errors that
-  happen later, in the refresh or on a click.
+  happen later, in the refresh or on a click. The refresh skips itself while
+  `checking()`, so a check writes no patch and hands no note.
 - **The strip's log is out of sight**: what `patch.py` and `hunk session list`
   print goes to the mod's `console.log`, which Herdr started from the Dock sends
   nowhere. To see why a repository shows `(exit 3)`, run the same command in a
