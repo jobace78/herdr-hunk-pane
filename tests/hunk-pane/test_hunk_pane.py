@@ -34,7 +34,7 @@ if command == "ls":
 # the tab's hunk terminal as hc ls lists it and as hc get reads it: running hunk on the tab's patch
 LISTING = json.dumps({"terminals": [{"address": "t9"}]})
 PANE = json.dumps({"argv": ["sh", "hunk-pane", "/home/me/.cache/hunk-pane/tb1.patch", "--watch"]})
-ROOT = Path(__file__).resolve().parent.parent
+ROOT = Path(__file__).resolve().parents[2]
 TAB_LABELS = json.dumps({"labels": {"herdr.space": "sp1", "herdr.tab": "tb1"}})
 
 

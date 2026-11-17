@@ -7,7 +7,7 @@ from typing import Callable
 
 import pytest
 
-ROOT = Path(__file__).resolve().parent.parent
+ROOT = Path(__file__).resolve().parents[2]
 TRACKED_CHANGE = (
     b"diff --git a/repo/a.txt b/repo/a.txt\n"
     b"index 5626abf..f719efd 100644\n"

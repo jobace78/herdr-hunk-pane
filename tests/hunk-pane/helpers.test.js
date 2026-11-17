@@ -13,7 +13,7 @@ import {
   sessionList,
   tabOf,
   userNotes,
-} from "../mods/hunk-pane/helpers.js";
+} from "../../mods/hunk-pane/helpers.js";
 
 const API = "/home/me/work/api";
 const WEB = "/home/me/work/web";

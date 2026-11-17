@@ -1,6 +1,6 @@
 // The decisions of the hunk-pane strip that need no Herdr: what its labels, a note and the agents
 // say. Kept apart from main.js, whose Herdr modules only load inside Herdr, so node --test can load
-// this one (tests/helpers.test.js).
+// this one (tests/hunk-pane/helpers.test.js).
 
 const FROM_PREFIX = "hunk-pane.from.";
 export const MOD = "hunk-pane";

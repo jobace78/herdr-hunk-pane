@@ -166,7 +166,11 @@ note's thread.
   Copy the mod folder, never link it: through a symlinked folder Herdr runs the
   code but loads no art, so the × is missing. After updating this folder, copy
   the mod folder into `mods/` again: Herdr and the linked `hunk-pane` both run
-  that copy.
+  that copy. From a clone, `./manage.py install` does both copy and link (in
+  `~/.local/bin`, beside Herdr's `hc`) and runs `herdr-app check`, bringing the
+  previous copy back if it fails; run it again after a pull to update.
+  `./manage.py uninstall` removes the copy, the link and the patches. The
+  layout block is left to you either way.
 - **It runs programs**: the strip runs `python3`, `rm` and `hunk session` and
   calls `hc`, which types notes into agents; the script runs `git`, `hc` and
   `hunk`. Neither reaches the network itself (git may, in a partial clone, as in
@@ -246,8 +250,9 @@ note's thread.
 
 ## Done when
 
-- The tests in `tests/` pass: `node --test tests/`, and pytest 8.4 (the last
-  release on Python 3.9) on Python 3.9 for the two scripts.
+- The tests pass: `node --test tests/`, and pytest 8.4 (the last release on
+  Python 3.9) on Python 3.9 for the three scripts (`test_manage.py` and
+  `tests/hunk-pane/`).
 - `herdr-app check mods/hunk-pane` passes and the strip shows under the panes,
   with only its icon, in a tab with no pane.
 - `! hunk-pane` in a repository with changes opens a `hunk` pane in that tab,

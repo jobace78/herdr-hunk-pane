@@ -1,7 +1,8 @@
 # The scripts are not beside their tests, as a script's tests usually are: patch.py sits in the mod
 # folder, which is copied whole into ~/.config/herdr-app/mods/, and a test beside it would be
-# installed with it. Each test module loads its script by path. pytest 8.4 is the last release that
-# runs on Python 3.9, the one the scripts target.
+# installed with it. manage.py, which is not installed, has its test beside it. Each test module
+# loads its script by path. pytest 8.4 is the last release that runs on Python 3.9, the one the
+# scripts target.
 
 import subprocess
 from pathlib import Path
