@@ -12,7 +12,6 @@ import { View, div, image, svg } from "gpui-kit";
 import {
   agents,
   appHome,
-  checking,
   exec,
   focused,
   hc,
@@ -21,6 +20,7 @@ import {
   run,
   terminals,
   theme,
+  window,
 } from "herdr";
 import {
   MOD,
@@ -170,8 +170,9 @@ export default class HunkPane extends View {
   // patches of panes gone and hands the new notes to their agents. render passes the hunk terminals
   // it read.
   refresh(cx, { full = false, hunkTerminals = hunks() } = {}) {
-    // herdr-app check runs the mod for real: it writes no patch and hands no note
-    if (this.busy || checking()) {
+    // nothing while the window is out of sight, herdr-app check included (it has no window): no
+    // git run, no patch written, no note handed; the timer resumes once the window shows again
+    if (this.busy || !window()?.visible) {
       return;
     }
     const running = hunkTerminals.filter((h) => !h.lost);

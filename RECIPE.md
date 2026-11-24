@@ -61,7 +61,9 @@ note's thread.
 - **Refresh**: every 3 s the strip rewrites the focused tab's patch, and right
   away after a click or a tab switch; the panes of other tabs wait until their
   tab is shown. The patch file is replaced only when its content changes, so
-  hunk reloads only then, and keeps its scroll position.
+  hunk reloads only then, and keeps its scroll position. While the window is
+  out of sight (minimized, hidden, covered or on another Space) the strip does
+  nothing, and catches up at the next refresh once it shows.
 - **Notes**: a note you write in the pane goes, once, to the agent of the
   terminal that added its repository last: a one-line message with the real file
   path, the line and your text, asking it to make any change the note asks for
@@ -92,7 +94,8 @@ note's thread.
   window, sidebar included, not under the panes.
 - **`mods/hunk-pane/main.js`**, the strip: a `View` whose `render()` reads
   `focused().tab` and `terminals()`, and draws with `h_flex`, `div`, `image`,
-  `svg` and `theme()`. A `cx.timer.every(3000)` refresh runs `python3
+  `svg` and `theme()`. A `cx.timer.every(3000)` refresh, skipped while
+  `window()?.visible` is not true, runs `python3
   <appHome>/mods/hunk-pane/patch.py <patch> <name> <repo>` through `exec` inside
   `cx.spawn`, lists `~/.cache/hunk-pane/` with `fs.readdir` and deletes the
   files of panes gone with `rm -f`. Clicks call `hc(["label", …])`; the last ×
@@ -143,8 +146,8 @@ note's thread.
 
 - **Programs**: `hunk` (tested with 0.25.0), `git` 2.31 or newer (`rev-parse
   --path-format`), `python3` 3.9 or newer (the one macOS ships in
-  `/usr/bin/python3` is enough), `hc` (Herdr's), `sh` and `rm`. Herdr 0.1.16
-  or newer (`checking`).
+  `/usr/bin/python3` is enough), `hc` (Herdr's), `sh` and `rm`. Herdr 0.1.18
+  or newer (`window().visible`).
 - **Art**: `close.svg`, a copy of Herdr's `mods/pane/close.svg`, so the × looks
   like the panes' own; `hunk_pane.svg`, the ± drawn with `image`, since `svg`
   draws in the text color alone.
@@ -214,7 +217,8 @@ note's thread.
   `try`/`finally`.
 - **`herdr-app check`** renders the mod once; it does not catch errors that
   happen later, in the refresh or on a click. The refresh skips itself while
-  `checking()`, so a check writes no patch and hands no note.
+  `window()?.visible` is not true, and a check has no window, so it writes no
+  patch and hands no note.
 - **The strip's log is out of sight**: what `patch.py` and `hunk session list`
   print goes to the mod's `console.log`, which Herdr started from the Dock sends
   nowhere. To see why a repository shows `(exit 3)`, run the same command in a
